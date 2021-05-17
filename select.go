@@ -16,6 +16,7 @@ type selectData struct {
 	Options           []string
 	Columns           []Sqlizer
 	From              Sqlizer
+	AsOf              Sqlizer
 	Joins             []Sqlizer
 	WhereParts        []Sqlizer
 	GroupBys          []string
@@ -99,6 +100,15 @@ func (d *selectData) toSql() (sqlStr string, args []interface{}, err error) {
 	if d.From != nil {
 		sql.WriteString(" FROM ")
 		args, err = appendToSql([]Sqlizer{d.From}, sql, "", args)
+		if err != nil {
+			return
+		}
+	}
+
+	// As of system time
+	if d.AsOf != nil {
+		sql.WriteString(" AS OF SYSTEM TIME ")
+		args, err = appendToSql([]Sqlizer{d.AsOf}, sql, "", args)
 		if err != nil {
 			return
 		}
@@ -275,6 +285,11 @@ func (b SelectBuilder) Column(column interface{}, args ...interface{}) SelectBui
 // From sets the FROM clause of the query.
 func (b SelectBuilder) From(from string) SelectBuilder {
 	return builder.Set(b, "From", newPart(from)).(SelectBuilder)
+}
+
+// From sets the FROM clause of the query.
+func (b SelectBuilder) AsOfSystemTime(from string) SelectBuilder {
+	return builder.Set(b, "AsOf", newPart(from)).(SelectBuilder)
 }
 
 // FromSelect sets a subquery into the FROM clause of the query.

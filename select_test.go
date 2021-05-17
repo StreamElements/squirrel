@@ -59,6 +59,15 @@ func TestSelectBuilderToSql(t *testing.T) {
 	assert.Equal(t, expectedArgs, args)
 }
 
+func TestAsOfSystemTime(t *testing.T) {
+	b := Select("test").AsOfSystemTime("10s").Where(Eq{"f4": true})
+	query, args, _ := b.ToSql()
+	expectedSql := `SELECT test AS OF SYSTEM TIME 10s WHERE f4 = ?`
+	expectedArgs := []interface{}{true}
+	assert.Equal(t, expectedSql, query)
+	assert.Equal(t, expectedArgs, args)
+}
+
 func TestSelectBuilderFromSelect(t *testing.T) {
 	subQ := Select("c").From("d").Where(Eq{"i": 0})
 	b := Select("a", "b").FromSelect(subQ, "subq")
