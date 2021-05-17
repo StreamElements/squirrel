@@ -287,7 +287,8 @@ func (b SelectBuilder) From(from string) SelectBuilder {
 	return builder.Set(b, "From", newPart(from)).(SelectBuilder)
 }
 
-// From sets the FROM clause of the query.
+// AsOfSystemTime sets the AS OF SYSTEM TIME timestamp clause which causes
+// statements to execute using the database contents "as of" a specified time in the past.
 func (b SelectBuilder) AsOfSystemTime(from string) SelectBuilder {
 	return builder.Set(b, "AsOf", newPart(from)).(SelectBuilder)
 }
