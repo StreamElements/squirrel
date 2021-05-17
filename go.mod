@@ -9,5 +9,3 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/testify v1.2.2
 )
-
-replace github.com/Masterminds/squirrel => github.com/StreamElements/squirrel v1.5.0
