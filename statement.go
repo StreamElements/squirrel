@@ -21,6 +21,12 @@ func (b StatementBuilderType) Replace(into string) InsertBuilder {
 	return InsertBuilder(b).statementKeyword("REPLACE").Into(into)
 }
 
+// Replace returns a InsertBuilder for this StatementBuilderType with the
+// statement keyword set to "UPSERT".
+func (b StatementBuilderType) Upsert(into string) InsertBuilder {
+	return InsertBuilder(b).statementKeyword("UPSERT").Into(into)
+}
+
 // Update returns a UpdateBuilder for this StatementBuilderType.
 func (b StatementBuilderType) Update(table string) UpdateBuilder {
 	return UpdateBuilder(b).Table(table)
@@ -71,6 +77,14 @@ func Insert(into string) InsertBuilder {
 // See InsertBuilder.Into.
 func Replace(into string) InsertBuilder {
 	return StatementBuilder.Replace(into)
+}
+
+// Replace returns a new InsertBuilder with the statement keyword set to
+// "UPSERT" and with the given table name.
+//
+// See InsertBuilder.Into.
+func Upsert(into string) InsertBuilder {
+	return StatementBuilder.Upsert(into)
 }
 
 // Update returns a new UpdateBuilder with the given table name.

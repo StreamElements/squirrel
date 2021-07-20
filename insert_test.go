@@ -101,3 +101,14 @@ func TestInsertBuilderReplace(t *testing.T) {
 
 	assert.Equal(t, expectedSQL, sql)
 }
+
+func TestInsertBuilderUpsert(t *testing.T) {
+	b := Upsert("table").Values(1)
+
+	expectedSQL := "UPSERT INTO table VALUES (?)"
+
+	sql, _, err := b.ToSql()
+	assert.NoError(t, err)
+
+	assert.Equal(t, expectedSQL, sql)
+}
