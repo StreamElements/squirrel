@@ -53,7 +53,7 @@ func (d *selectData) QueryRow() RowScanner {
 }
 
 func (d *selectData) ToSql() (sqlStr string, args []interface{}, err error) {
-	sqlStr, args, err = d.toSql()
+	sqlStr, args, err = d.toSqlRaw()
 	if err != nil {
 		return
 	}
@@ -63,10 +63,6 @@ func (d *selectData) ToSql() (sqlStr string, args []interface{}, err error) {
 }
 
 func (d *selectData) toSqlRaw() (sqlStr string, args []interface{}, err error) {
-	return d.toSql()
-}
-
-func (d *selectData) toSql() (sqlStr string, args []interface{}, err error) {
 	if len(d.Columns) == 0 {
 		err = fmt.Errorf("select statements must have at least one result column")
 		return
@@ -232,6 +228,11 @@ func (b SelectBuilder) ToSql() (string, []interface{}, error) {
 	return data.ToSql()
 }
 
+func (b SelectBuilder) toSqlRaw() (string, []interface{}, error) {
+	data := builder.GetStruct(b).(selectData)
+	return data.toSqlRaw()
+}
+
 // MustSql builds the query into a SQL string and bound args.
 // It panics if there are any errors.
 func (b SelectBuilder) MustSql() (string, []interface{}) {
@@ -240,11 +241,6 @@ func (b SelectBuilder) MustSql() (string, []interface{}) {
 		panic(err)
 	}
 	return sql, args
-}
-
-func (b SelectBuilder) toSqlRaw() (string, []interface{}, error) {
-	data := builder.GetStruct(b).(selectData)
-	return data.toSqlRaw()
 }
 
 // Prefix adds an expression to the beginning of the query
