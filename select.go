@@ -282,7 +282,8 @@ func (b SelectBuilder) RemoveColumns() SelectBuilder {
 // Column adds a result column to the query.
 // Unlike Columns, Column accepts args which will be bound to placeholders in
 // the columns string, for example:
-//   Column("IF(col IN ("+squirrel.Placeholders(3)+"), 1, 0) as col", 1, 2, 3)
+//
+//	Column("IF(col IN ("+squirrel.Placeholders(3)+"), 1, 0) as col", 1, 2, 3)
 func (b SelectBuilder) Column(column interface{}, args ...interface{}) SelectBuilder {
 	return builder.Append(b, "Columns", newPart(column, args...)).(SelectBuilder)
 }
@@ -360,6 +361,10 @@ func (b SelectBuilder) Where(pred interface{}, args ...interface{}) SelectBuilde
 		return b
 	}
 	return builder.Append(b, "WhereParts", newWherePart(pred, args...)).(SelectBuilder)
+}
+
+func (b SelectBuilder) NotDeleted() SelectBuilder {
+	return b.Where("deleted_at IS NULL")
 }
 
 // GroupBy adds GROUP BY expressions to the query.
