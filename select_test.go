@@ -68,6 +68,15 @@ func TestAsOfSystemTime(t *testing.T) {
 	assert.Equal(t, expectedArgs, args)
 }
 
+func TestNotDeleted(t *testing.T) {
+	b := Select("test").Where(Eq{"f4": true}).NotDeleted()
+	query, args, _ := b.ToSql()
+	expectedSql := `SELECT test WHERE f4 = ? AND deleted_at IS NULL`
+	expectedArgs := []interface{}{true}
+	assert.Equal(t, expectedSql, query)
+	assert.Equal(t, expectedArgs, args)
+}
+
 func TestSelectBuilderFromSelect(t *testing.T) {
 	subQ := Select("c").From("d").Where(Eq{"i": 0})
 	b := Select("a", "b").FromSelect(subQ, "subq")
